@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 76379cd27b3880a4f9d6cd8de46c10bf
+timeCreated: 1538835392
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: SF Fedora Symbols
+  fontNames:
+  - SF Fedora Symbols
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

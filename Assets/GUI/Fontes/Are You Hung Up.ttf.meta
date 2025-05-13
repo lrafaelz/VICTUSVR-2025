@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: e45c0eec246dc1c4e906b0e4922eaad5
+timeCreated: 1538835393
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Are You Hung Up
+  fontNames:
+  - Are You Hung Up
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

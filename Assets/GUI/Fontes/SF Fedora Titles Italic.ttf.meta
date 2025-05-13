@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: c05c336e1d59065428424b67861ce4de
+timeCreated: 1538835392
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: SF Fedora Titles
+  fontNames:
+  - SF Fedora Titles
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 83df4405a235aa34e83d9ef350758241, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

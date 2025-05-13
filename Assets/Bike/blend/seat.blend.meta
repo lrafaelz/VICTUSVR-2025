@@ -1,0 +1,116 @@
+fileFormatVersion: 2
+guid: 06666f4a4080162449175de1ca7b245a
+timeCreated: 1528810960
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: saddle-black-plastic
+    100002: saddle-clamp-bolt
+    100004: saddle-clamp-bolt-glossy
+    100006: saddle-rails
+    100008: saddle-velo-vl-1311
+    100010: //RootNode
+    100012: seat-clamp
+    100014: seat-post
+    400000: saddle-black-plastic
+    400002: saddle-clamp-bolt
+    400004: saddle-clamp-bolt-glossy
+    400006: saddle-rails
+    400008: saddle-velo-vl-1311
+    400010: //RootNode
+    400012: seat-clamp
+    400014: seat-post
+    2300000: saddle-black-plastic
+    2300002: saddle-clamp-bolt
+    2300004: saddle-clamp-bolt-glossy
+    2300006: saddle-rails
+    2300008: saddle-velo-vl-1311
+    2300010: seat-clamp
+    2300012: seat-post
+    3300000: saddle-black-plastic
+    3300002: saddle-clamp-bolt
+    3300004: saddle-clamp-bolt-glossy
+    3300006: saddle-rails
+    3300008: saddle-velo-vl-1311
+    3300010: seat-clamp
+    3300012: seat-post
+    4300000: saddle-clamp-bolt-glossy
+    4300002: saddle-clamp-bolt
+    4300004: saddle-velo-vl-1311
+    4300006: seat-clamp
+    4300008: seat-post
+    4300010: saddle-rails
+    4300012: saddle-black-plastic
+    7400000: Default Take
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

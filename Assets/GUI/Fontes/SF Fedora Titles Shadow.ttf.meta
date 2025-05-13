@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 80c485c4ea7d71e4ab840b54db323ac0
+timeCreated: 1538835392
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: SF Fedora Titles Shadow
+  fontNames:
+  - SF Fedora Titles Shadow
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

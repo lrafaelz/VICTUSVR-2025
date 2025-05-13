@@ -1,0 +1,11 @@
+Model Information:
+* title:	Wood Fence_v1_01
+* source:	https://sketchfab.com/3d-models/wood-fence-v1-01-9f5bbf8523e241b9b41c6784f8bb2409
+* author:	Arigura (https://sketchfab.com/arigura)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Wood Fence_v1_01" (https://sketchfab.com/3d-models/wood-fence-v1-01-9f5bbf8523e241b9b41c6784f8bb2409) by Arigura (https://sketchfab.com/arigura) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

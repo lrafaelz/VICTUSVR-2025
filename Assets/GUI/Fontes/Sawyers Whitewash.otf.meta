@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 4abfefa524fe4184380e074f5ec50199
+timeCreated: 1538835392
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Sawyer's Whitewash
+  fontNames:
+  - Sawyer's Whitewash
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

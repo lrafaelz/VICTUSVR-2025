@@ -1,0 +1,12 @@
+{
+    "date": "5/12/2025 10:02:49 PM",
+    "pacientName": "Rafael",
+    "distanceTravelled": 1039.407470703125,
+    "sessionTime": 60,
+    "score": 1200,
+    "velocity": [
+        20
+    ],
+    "BPMSensor": [],
+    "EMGSensor": []
+}

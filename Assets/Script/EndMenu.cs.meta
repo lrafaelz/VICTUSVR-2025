@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 7dbb1afd3ab0aea4181e68f23ab4f9bc
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - highscorePanel: {fileID: 568505400271790641, guid: bcb75ce40bb1639408c28cdc5d27dde0,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

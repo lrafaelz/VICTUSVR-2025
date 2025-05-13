@@ -1,0 +1,171 @@
+fileFormatVersion: 2
+guid: 68ccdafe766f56643a8cd42dbdb6f0b2
+timeCreated: 1528811006
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: bar-end-plugs
+    100002: bullhorn
+    100004: Circle_002
+    100006: //RootNode
+    100008: Helix_001
+    100010: Helix_002
+    100012: Helix_003
+    100014: spacers
+    100016: Spiral_001
+    100018: Spiral_003
+    100020: stem
+    100022: stem-bolt-1
+    100024: stem-bolt-2
+    100026: stem-bolt-3
+    100028: stem-bolt-4
+    100030: stem-bolt-5
+    100032: stem-bolt-6
+    100034: stem-bolt-7
+    100036: stem-cap
+    400000: bar-end-plugs
+    400002: bullhorn
+    400004: Circle_002
+    400006: //RootNode
+    400008: Helix_001
+    400010: Helix_002
+    400012: Helix_003
+    400014: spacers
+    400016: Spiral_001
+    400018: Spiral_003
+    400020: stem
+    400022: stem-bolt-1
+    400024: stem-bolt-2
+    400026: stem-bolt-3
+    400028: stem-bolt-4
+    400030: stem-bolt-5
+    400032: stem-bolt-6
+    400034: stem-bolt-7
+    400036: stem-cap
+    2300000: bar-end-plugs
+    2300002: bullhorn
+    2300004: Circle_002
+    2300006: Helix_001
+    2300008: Helix_002
+    2300010: Helix_003
+    2300012: spacers
+    2300014: Spiral_001
+    2300016: Spiral_003
+    2300018: stem
+    2300020: stem-bolt-1
+    2300022: stem-bolt-2
+    2300024: stem-bolt-3
+    2300026: stem-bolt-4
+    2300028: stem-bolt-5
+    2300030: stem-bolt-6
+    2300032: stem-bolt-7
+    2300034: stem-cap
+    3300000: bar-end-plugs
+    3300002: bullhorn
+    3300004: Circle_002
+    3300006: Helix_001
+    3300008: Helix_002
+    3300010: Helix_003
+    3300012: spacers
+    3300014: Spiral_001
+    3300016: Spiral_003
+    3300018: stem
+    3300020: stem-bolt-1
+    3300022: stem-bolt-2
+    3300024: stem-bolt-3
+    3300026: stem-bolt-4
+    3300028: stem-bolt-5
+    3300030: stem-bolt-6
+    3300032: stem-bolt-7
+    3300034: stem-cap
+    4300000: bullhorn
+    4300002: bar-end-plugs
+    4300004: Helix_002
+    4300006: Spiral_003
+    4300008: Helix_001
+    4300010: Spiral_001
+    4300012: Circle_002
+    4300014: stem-bolt-7
+    4300016: stem-cap
+    4300018: stem-bolt-5
+    4300020: stem-bolt-6
+    4300022: stem-bolt-2
+    4300024: stem-bolt-4
+    4300026: stem-bolt-3
+    4300028: stem-bolt-1
+    4300030: stem
+    4300032: spacers
+    4300034: Helix_003
+    7400000: Default Take
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
