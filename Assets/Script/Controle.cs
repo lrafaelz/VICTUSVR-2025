@@ -47,13 +47,11 @@ public class Controle : MonoBehaviour
   {
     BMXScript = BMXBike.GetComponent<BikeSystem.controller.MotorcycleController>();
     this.pacientName = "TESTE14";
-    databaseManager = new DatabaseManager();
-
   }
 
   private static void DataThread()
   {
-    serial = new SerialPort("COM12", 115200);
+    serial = new SerialPort("COM5", 115200);
     serial.Open();
     Thread.Sleep(200);
   }
@@ -76,8 +74,7 @@ public class Controle : MonoBehaviour
     displayBatimentos.text = " ";
     //fimDaPartida = getda interface
 
-
-
+    databaseManager = DatabaseManager.Instance;
   }
 
 
