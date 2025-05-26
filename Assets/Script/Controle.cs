@@ -46,14 +46,57 @@ public class Controle : MonoBehaviour
   void Awake()
   {
     BMXScript = BMXBike.GetComponent<BikeSystem.controller.MotorcycleController>();
-    this.pacientName = "TESTE14";
+    this.pacientName = "TESTE";
   }
 
   private static void DataThread()
   {
-    serial = new SerialPort("COM5", 115200);
+    string correctPort = FindCorrectPort();
+    if (string.IsNullOrEmpty(correctPort))
+    {
+      Debug.LogError("No valid COM port found with the expected data format!");
+      return;
+    }
+
+    serial = new SerialPort(correctPort, 115200);
     serial.Open();
     Thread.Sleep(200);
+  }
+
+  private static string FindCorrectPort()
+  {
+    string[] ports = SerialPort.GetPortNames();
+    Debug.Log("Available ports: " + string.Join(", ", ports));
+
+    foreach (string port in ports)
+    {
+      try
+      {
+        using (SerialPort testPort = new SerialPort(port, 115200))
+        {
+          testPort.ReadTimeout = 1000; // 1 second timeout
+          testPort.Open();
+
+          // Try to read data
+          string data = testPort.ReadLine();
+          if (data.Contains("#"))
+          {
+            Debug.Log($"Found valid port: {port} with data: {data}");
+            testPort.Close();
+            return port;
+          }
+
+          testPort.Close();
+        }
+      }
+      catch (Exception e)
+      {
+        Debug.Log($"Error testing port {port}: {e.Message}");
+        continue;
+      }
+    }
+
+    return null;
   }
 
   // private void OnDestroy(){
@@ -65,7 +108,8 @@ public class Controle : MonoBehaviour
   // Use this for initialization
   void Start()
   {
-    IOThread.Start();
+    if (BMXScript.useSerial == 1)
+      IOThread.Start();
     Time.timeScale = 0;
     // serial.ReadTimeout = -1;
     // navmesh = player.GetComponent<NavMeshAgent> ();
@@ -75,6 +119,13 @@ public class Controle : MonoBehaviour
     //fimDaPartida = getda interface
 
     databaseManager = DatabaseManager.Instance;
+
+    // Pega o paciente selecionado do dropdown
+    string pacienteSelecionado = AdvancedDropdown.PacienteSelecionado;
+    if (!string.IsNullOrEmpty(pacienteSelecionado))
+    {
+      this.pacientName = pacienteSelecionado;
+    }
   }
 
 
@@ -106,7 +157,7 @@ public class Controle : MonoBehaviour
       Debug.Log("Scena Atual: " + scenaAtual);
       StartCoroutine(wait(5f));
       tempo += Time.deltaTime;
-      tempoMinutos = ((int)tempo / 60);
+      tempoMinutos = (int)tempo / 60;
       tempoSegundos = (int)tempo % 60;
       displayContagem.text = tempoMinutos.ToString("00") + ":" + tempoSegundos.ToString("00");
       // Debug.Log("BarreiraScore: " + this.barreiraScore);
@@ -123,31 +174,41 @@ public class Controle : MonoBehaviour
       }
       else
       {
-        string[] valores = serial.ReadLine().Split('#'); // separador de valores
-                                                         // Debug.Log("Valores" + "#"+valores[0] +"#"+ valores[1] +"#"+ valores[2] + "#" + valores[3] );
-        while (valores.Length < 5)
-        { // to avoid errors
-          valores = serial.ReadLine().Split('#'); // separador de valores
+        try
+        {
+          string[] valores = serial.ReadLine().Split('#'); // separador de valores
+          // Debug.Log("Valores" + "#"+valores[0] +"#"+ valores[1] +"#"+ valores[2] + "#" + valores[3] );
+          while (valores.Length < 5)
+          { // to avoid errors
+            valores = serial.ReadLine().Split('#'); // separador de valores
+            serial.BaseStream.Flush(); //Clear the serial information so we assure we get new information.
+          }
+          this.bpm = valores[0];
+          this.velocidade = float.Parse(valores[1], CultureInfo.InvariantCulture);
+          this.emg = valores[2];
+          this.direcao = int.Parse(valores[3]);
+          this.distanceTravelled = float.Parse(valores[4], CultureInfo.InvariantCulture);
+
+          //eixo = valores [3];
+          // LerDadosDoSerial();
+          Debug.Log("Valores" + "#" + this.bpm + "#" + this.velocidade + "#" + this.emg + "#" + this.direcao + "#" + this.distanceTravelled);
+          displayBatimentos.text = this.bpm;
+          displayEmg.text = "EMG: " + this.emg;
+          // navmesh.speed = (float)(velocidade / 3.6);						
+          this.velInt = (int)this.BMXScript.ActualVelocity;
+          this.displayVelocidade.text = this.velInt.ToString();
+          this.displayDistance.text = distanceTravelled.ToString();
+
           serial.BaseStream.Flush(); //Clear the serial information so we assure we get new information.
         }
-        this.bpm = valores[0];
-        this.velocidade = float.Parse(valores[1], CultureInfo.InvariantCulture);
-        this.emg = valores[2];
-        this.direcao = int.Parse(valores[3]);
-        this.distanceTravelled = float.Parse(valores[4], CultureInfo.InvariantCulture);
-
-        //eixo = valores [3];
-        // LerDadosDoSerial();
-        Debug.Log("Valores" + "#" + this.bpm + "#" + this.velocidade + "#" + this.emg + "#" + this.direcao + "#" + this.distanceTravelled);
-        displayBatimentos.text = this.bpm;
-        displayEmg.text = "EMG: " + this.emg;
-        // navmesh.speed = (float)(velocidade / 3.6);						
-        this.velInt = (int)this.BMXScript.ActualVelocity;
-        this.displayVelocidade.text = this.velInt.ToString();
-        this.displayDistance.text = distanceTravelled.ToString();
-
-        serial.BaseStream.Flush(); //Clear the serial information so we assure we get new information.
-
+        catch (Exception e)
+        {
+          Debug.LogError("Erro ao ler dados do dispositivo: " + e.Message);
+          displayBatimentos.text = "Conecte os sensores";
+          displayEmg.text = "Conecte o sensores";
+          displayVelocidade.text = "0";
+          displayDistance.text = "0";
+        }
       }
 
     }
@@ -214,9 +275,28 @@ public class Controle : MonoBehaviour
 
   public void getArrayValues()
   {
-    this.velArray = velArray.Append(velInt).ToArray();
-    this.BPMArray = BPMArray.Append(int.Parse(bpm)).ToArray();
-    this.EMGArray = EMGArray.Append(int.Parse(emg)).ToArray();
+    // Initialize arrays if they're null
+    if (velArray == null) velArray = new int[0];
+    if (BPMArray == null) BPMArray = new int[0];
+    if (EMGArray == null) EMGArray = new int[0];
+
+    // Add velocity value if it exists
+    if (velInt != 0)
+    {
+      velArray = velArray.Append(velInt).ToArray();
+    }
+
+    // Add BPM value if it exists and can be parsed
+    if (!string.IsNullOrEmpty(bpm) && int.TryParse(bpm, out int bpmValue))
+    {
+      BPMArray = BPMArray.Append(bpmValue).ToArray();
+    }
+
+    // Add EMG value if it exists and can be parsed
+    if (!string.IsNullOrEmpty(emg) && int.TryParse(emg, out int emgValue))
+    {
+      EMGArray = EMGArray.Append(emgValue).ToArray();
+    }
   }
 
   public void SaveToJson()
@@ -226,7 +306,7 @@ public class Controle : MonoBehaviour
     data.date = date;
     // Debug.Log("timestamp: " + data.date);
     Debug.Log("Pacient Name: " + this.pacientName);
-    data.pacientName = "Rafael";
+    data.pacientName = this.pacientName;
     data.distanceTravelled = this.distanceTravelled;
     data.sessionTime = (int)this.fimDaPartida;
     data.score = this.score;

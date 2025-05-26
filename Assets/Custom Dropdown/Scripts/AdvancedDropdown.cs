@@ -33,10 +33,10 @@ public class AdvancedDropdown : MonoBehaviour
   [SerializeField] RectTransform optionsContent; //Options content
 
   private readonly string[] initialOptions = new string[] {
-        "Maçã",
-        "Banana",
-        "Laranja",
-        "Abacaxi"
+        "teste1",
+        "teste2",
+        "teste3",
+        "teste4"
     };
 
   enum AnimationDropdownTypes
@@ -88,6 +88,8 @@ public class AdvancedDropdown : MonoBehaviour
 
   CanvasGroup optionCanvasGroup; //Option canvas group component
 
+  public static string PacienteSelecionado { get; private set; }
+
   RectTransform FindCanvas(RectTransform currentParent)
   {
     if (currentParent.GetComponent<Canvas>())
@@ -98,16 +100,18 @@ public class AdvancedDropdown : MonoBehaviour
     return FindCanvas(currentParent.parent.GetComponent<RectTransform>());
   }
 
-  void Start()
+  void OnEnable()
   {
+    // Inicializa o optionCanvasGroup para evitar NullReferenceException
+    optionCanvasGroup = optionsObject.GetComponent<CanvasGroup>();
+    if (optionCanvasGroup == null)
+      optionCanvasGroup = optionsObject.gameObject.AddComponent<CanvasGroup>();
+
     firstObj = optionsContent.GetChild(0).gameObject;
     firstObj.SetActive(false);
     optionsObject.gameObject.SetActive(false);
-
-    // Limpa opções existentes
     DeleteAllOptions();
 
-    // Configuração inicial do dropdown
     targetCanvas = FindCanvas(GetComponent<RectTransform>());
     optionsCanvasSorting.overrideSorting = false;
     backCanvasSorting.overrideSorting = false;
@@ -115,83 +119,54 @@ public class AdvancedDropdown : MonoBehaviour
     backCanvasSorting.sortingOrder = 100;
     optionsObject.sizeDelta = new Vector2(optionsObject.sizeDelta.x, 0);
 
-    // Carrega os pacientes de forma assíncrona
-    LoadPatientsAsync();
-    optionCanvasGroup = optionsObject.GetComponent<CanvasGroup>();
+    StartCoroutine(WaitAndLoadPatients());
   }
+
+
+
+  IEnumerator WaitAndLoadPatients()
+  {
+    int count = 0;
+    while (DatabaseManager.Instance == null || !DatabaseManager.Instance.IsReady)
+    {
+      Debug.Log($"[AdvancedDropdown] Esperando DatabaseManager... (tentativa {count++})");
+      yield return null;
+      if (count > 300) // aprox 5 segundos
+      {
+        Debug.LogError("[AdvancedDropdown] Timeout esperando DatabaseManager estar pronto!");
+        yield break;
+      }
+    }
+    Debug.Log("[AdvancedDropdown] DatabaseManager pronto, carregando pacientes...");
+    LoadPatientsAsync();
+  }
+
 
   private async void LoadPatientsAsync()
   {
-    Debug.Log("[AdvancedDropdown] LoadPatientsAsync chamado - Thread ID: " + System.Threading.Thread.CurrentThread.ManagedThreadId);
-    // Só executa em Play Mode
-    if (!Application.isPlaying)
-    {
-      Debug.Log("[AdvancedDropdown] Não está em Play Mode, abortando.");
-      return;
-    }
-
-    // Aguarda até o Firestore estar inicializado, com timeout maior
-    int maxWait = 300; // 30 segundos
-    int waited = 0;
-
-    try
-    {
-      Debug.Log("[AdvancedDropdown] Aguardando Firestore ser inicializado...");
-      while (DatabaseManager.Instance.db == null && waited < maxWait)
-      {
-        await Task.Delay(100); // espera 100ms
-        waited++;
-
-        if (waited % 50 == 0) // log a cada 5 segundos
-        {
-          Debug.Log($"[AdvancedDropdown] Ainda aguardando Firestore... ({waited / 10} segundos)");
-        }
-      }
-
-      if (DatabaseManager.Instance.db == null)
-      {
-        Debug.LogError("[AdvancedDropdown] Firestore não foi inicializado após 30 segundos!");
-        return;
-      }
-    }
-    catch (Exception ex)
-    {
-      Debug.LogError("[AdvancedDropdown] Erro ao aguardar inicialização do Firestore: " + ex.Message);
-      return;
-    }
-
-    Debug.Log("[AdvancedDropdown] Firestore está inicializado, buscando pacientes...");
-
     try
     {
       DeleteAllOptions();
-      Debug.Log("[AdvancedDropdown] Buscando lista de pacientes da instituição 'SRF'...");
-      List<string> patients = await DatabaseManager.Instance.GetPatientsList("SRF");
-      Debug.Log($"[AdvancedDropdown] Encontrados {patients.Count} pacientes.");
 
-      // Verifica se há pacientes
-      if (patients.Count == 0)
+      if (DatabaseManager.Instance == null)
       {
-        Debug.LogWarning("[AdvancedDropdown] Não foram encontrados pacientes para esta instituição.");
-        // Adicionar opção padrão para indicar que não há pacientes
-        AddOptions(new string[] { "Nenhum paciente encontrado" });
-      }
-      else
-      {
-        AddOptions(patients.ToArray());
-      }
-
-      if (value != -1)
-        SelectOption(value);
-      else
+        Debug.LogError("[AdvancedDropdown] DatabaseManager.Instance is null");
+        AddOptions(new[] { "Erro ao carregar" });
         SetDefaultText();
+        return;
+      }
+
+      List<string> patients = await DatabaseManager.Instance.GetPatientsList("SRF");
+      if (patients.Count == 0)
+        AddOptions(new[] { "Nenhum paciente" });
+      else
+        AddOptions(patients.ToArray());
+      SetDefaultText();
     }
     catch (Exception e)
     {
-      Debug.LogError($"[AdvancedDropdown] Erro ao carregar pacientes: {e.Message}");
-      // Adicionar uma opção indicando erro
-      DeleteAllOptions();
-      AddOptions(new string[] { "Erro ao carregar pacientes" });
+      Debug.LogError($"[AdvancedDropdown] Exception: {e}");
+      AddOptions(new[] { "Erro ao carregar" });
       SetDefaultText();
     }
   }
@@ -469,6 +444,7 @@ public class AdvancedDropdown : MonoBehaviour
     {
       spawnedList[i].SetSelectState(i == value);
     }
+    PacienteSelecionado = optionsList[id].nameText;
     CloseOptions();
     if (onChangedValue != null)
     {

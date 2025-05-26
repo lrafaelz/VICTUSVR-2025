@@ -1,6 +1,4 @@
-﻿// CÓDIGO ANTIGO
-
-
+﻿
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,11 +19,11 @@ public class GerenciadordoGame : MonoBehaviour
 
   public static GerenciadordoGame instancia;
 
-  IEnumerator Start()
-  {
-    yield return new WaitForSeconds(5);
-    SceneManager.LoadScene("Login", LoadSceneMode.Single);
-  }
+  // IEnumerator Start()
+  // {
+  //   // yield return new WaitForSeconds(5);
+  //   // SceneManager.LoadScene("Login", LoadSceneMode.Single);
+  // }
   public static void FinalizarJogo()
   {
 
@@ -49,7 +47,7 @@ public class GerenciadordoGame : MonoBehaviour
 
   }
 
-  public void loginSuccess()
+  public void LoginSuccess()
   {
     SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
   }

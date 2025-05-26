@@ -5352,6 +5352,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 105141617}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &109335081 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1190561884327805433, guid: bcb75ce40bb1639408c28cdc5d27dde0, type: 3}
+  m_PrefabInstance: {fileID: 1160315026}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &109335083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 109335081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f281e6fa0c3c89947a22aac9de1bc66d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &109335084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 109335081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dbb1afd3ab0aea4181e68f23ab4f9bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highscorePanel: {fileID: 109335081}
+  endmenu: {fileID: 1528363852}
 --- !u!1 &113928700
 GameObject:
   m_ObjectHideFlags: 0
@@ -44421,10 +44452,26 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 1190561884327805433, guid: bcb75ce40bb1639408c28cdc5d27dde0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8034063080842473750, guid: bcb75ce40bb1639408c28cdc5d27dde0, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 4103216750850669320, guid: bcb75ce40bb1639408c28cdc5d27dde0, type: 3}
+    - {fileID: 568505400271790635, guid: bcb75ce40bb1639408c28cdc5d27dde0, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1190561884327805433, guid: bcb75ce40bb1639408c28cdc5d27dde0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 109335084}
+    - targetCorrespondingSourceObject: {fileID: 1190561884327805433, guid: bcb75ce40bb1639408c28cdc5d27dde0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 109335083}
   m_SourcePrefab: {fileID: 100100000, guid: bcb75ce40bb1639408c28cdc5d27dde0, type: 3}
 --- !u!1 &1163048317
 GameObject:
@@ -57402,6 +57449,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f52d83ed8a74c28419b9a02197db75db, type: 3}
+--- !u!1 &1528363852 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8034063080842473750, guid: bcb75ce40bb1639408c28cdc5d27dde0, type: 3}
+  m_PrefabInstance: {fileID: 1160315026}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1533559819
 GameObject:
   m_ObjectHideFlags: 0
@@ -76456,7 +76508,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967279
+    m_Bits: 39
   m_RenderingPath: 1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -93599,7 +93651,7 @@ PrefabInstance:
       objectReference: {fileID: 224685596923111293}
     - target: {fileID: 7214769781358474894, guid: f60e305d5a7e4224abb8a10d5248b784, type: 3}
       propertyPath: useSerial
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -94615,6 +94667,10 @@ PrefabInstance:
     - target: {fileID: 1161504200071706, guid: a91ad72e163ff3640bacf6e87ce78f67, type: 3}
       propertyPath: m_Name
       value: GUIPartida
+      objectReference: {fileID: 0}
+    - target: {fileID: 1161504200071706, guid: a91ad72e163ff3640bacf6e87ce78f67, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114106868568360274, guid: a91ad72e163ff3640bacf6e87ce78f67, type: 3}
       propertyPath: BMXBike

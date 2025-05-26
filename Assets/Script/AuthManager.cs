@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using Firebase;
 using Firebase.Auth;
+using Firebase.Extensions;
 using TMPro;
 using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
@@ -25,7 +26,6 @@ public class AuthManager : MonoBehaviour
 
   [Header("Select Patient")]
 
-  public TMP_InputField patientNameInputField;
 
   public TMP_Text warningSelectPatientText;
 
@@ -58,20 +58,20 @@ public class AuthManager : MonoBehaviour
       DependencyStatus result = await FirebaseApp.CheckAndFixDependenciesAsync();
 
       // Este callback é executado na thread principal
-      UnityMainThreadDispatcher.Instance().EnqueueAsync(() =>
-      {
-        Debug.Log("[AuthManager] Callback do CheckAndFixDependenciesAsync na thread: " + System.Threading.Thread.CurrentThread.ManagedThreadId);
-        if (result == DependencyStatus.Available)
-        {
-          Debug.Log("[AuthManager] Firebase dependencies available");
-          InitializeFirebase();
-          firebaseInitialized = true;
-        }
-        else
-        {
-          Debug.LogError("[AuthManager] Could not resolve all Firebase dependencies: " + result);
-        }
-      }).ConfigureAwait(false);
+      FirebaseApp.CheckAndFixDependenciesAsync()
+         .ContinueWithOnMainThread(depTask =>
+         {
+           if (depTask.Result != DependencyStatus.Available)
+           {
+             Debug.LogError($"[AuthManager] Falha nas deps: {depTask.Result}");
+             return;
+           }
+
+           Debug.Log("[AuthManager] Dependências OK, inicializando Auth e Firestore");
+           auth = FirebaseAuth.DefaultInstance;                             // Auth
+           firebaseInitialized = true;
+         });
+
     }
     catch (Exception ex)
     {
@@ -105,12 +105,6 @@ public class AuthManager : MonoBehaviour
 
     //Call the login coroutine passing the email and password
     StartCoroutine(Login(emailLoginField.text, passwordLoginField.text));
-  }
-
-  public void SelectPatientButton()
-  {
-    Debug.Log($"SelectPatientButton: {patientNameInputField.text}");
-    StartCoroutine(SelectPatient(patientNameInputField.text));
   }
 
   private IEnumerator Login(string _email, string _password)
@@ -156,28 +150,17 @@ public class AuthManager : MonoBehaviour
       User = LoginTask.Result.User;
       Debug.LogFormat("[AuthManager] User signed in successfully: {0} ({1})", User.DisplayName, User.Email);
       warningLoginText.text = "";
-      confirmLoginText.text = "Logged In";
+      confirmLoginText.text = "Logado com sucesso";
 
-      // Inicialize o Firestore aqui!
-      try
-      {
-        Debug.Log("[AuthManager] Inicializando Firestore após login bem-sucedido...");
-        DatabaseManager.Instance.InitializeFirestore();
-        Debug.Log("[AuthManager] Firestore inicializado após login!");
-      }
-      catch (Exception ex)
-      {
-        Debug.LogError("[AuthManager] Erro ao inicializar Firestore: " + ex.Message);
-        warningLoginText.text = "Erro ao conectar ao banco de dados. Tente novamente.";
-        yield break; // Interrompe a coroutine em caso de erro
-      }
 
       // Espere um momento para garantir que a inicialização seja concluída
-      yield return new WaitForSeconds(0.5f);
+      yield return new WaitForSeconds(0.3f);
 
       // Switch to select patient
       loginUI.SetActive(false);
       selectPatientUI.SetActive(true);
+
+      Debug.Log("[AuthManager] Selecione o paciente");
     }
   }
 
@@ -192,6 +175,7 @@ public class AuthManager : MonoBehaviour
     {
       warningSelectPatientText.text = "";
       yield return new WaitForSeconds(1f);
+      Debug.Log("[AuthManager] Carregando cena MainMenu");
       SceneManager.LoadScene("MainMenu");
     }
   }

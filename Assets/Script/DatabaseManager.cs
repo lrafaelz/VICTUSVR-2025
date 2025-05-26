@@ -1,74 +1,55 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Firebase;
 using Firebase.Firestore;
 using Firebase.Extensions;
 using System.Threading.Tasks;
 using System;
+using System.Linq;
 
 public class DatabaseManager : MonoBehaviour
 {
-  private static DatabaseManager instance;
-  public static DatabaseManager Instance
-  {
-    get
-    {
-      if (instance == null)
-      {
-        instance = FindObjectOfType<DatabaseManager>();
-        if (instance == null)
-        {
-          var go = new GameObject("DatabaseManager");
-          instance = go.AddComponent<DatabaseManager>();
-          if (Application.isPlaying)
-            DontDestroyOnLoad(go);
-        }
-      }
-      return instance;
-    }
-  }
-
+  public static DatabaseManager Instance { get; private set; }
   public FirebaseFirestore db;
+  public bool IsReady { get; private set; }
   Controle controleScript;
 
   void Awake()
   {
-    if (instance == null)
+    if (Instance == null)
     {
-      instance = this;
-      if (Application.isPlaying)
-        DontDestroyOnLoad(gameObject);
+      Instance = this;
+      DontDestroyOnLoad(gameObject);
+
+      InitializeFirestore();
     }
-    else if (instance != this)
+    else if (Instance != this)
     {
       Destroy(gameObject);
+      return;
     }
   }
+
 
   public void InitializeFirestore()
   {
-    try
-    {
-      Debug.Log("[DatabaseManager] Inicializando Firestore...");
-      db = FirebaseFirestore.DefaultInstance;
-
-      if (db == null)
-      {
-        Debug.LogError("[DatabaseManager] Erro: FirebaseFirestore.DefaultInstance retornou null!");
-        return;
-      }
-
-      Debug.Log("[DatabaseManager] Firestore inicializado com sucesso!");
-    }
-    catch (Exception ex)
-    {
-      Debug.LogError("[DatabaseManager] Erro ao inicializar Firestore: " + ex.Message);
-      if (ex.InnerException != null)
-      {
-        Debug.LogError("[DatabaseManager] Inner exception: " + ex.InnerException.Message);
-      }
-    }
+    Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
+        {
+          if (task.Result == Firebase.DependencyStatus.Available)
+          {
+            db = FirebaseFirestore.DefaultInstance;
+            IsReady = true;
+            Debug.Log("[DatabaseManager] Firestore pronto.");
+          }
+          else
+          {
+            Debug.LogError("[DatabaseManager] Falha nas dependências Firebase: " + task.Result);
+          }
+        });
   }
+
+
 
   // Start is called before the first frame update
   void Start()
@@ -138,10 +119,9 @@ public class DatabaseManager : MonoBehaviour
   public async Task add_patient_sessions(string instituitionName, string patientName, string date, float distanceTravelled, int sessionTime, int score, int[] velocity, int[] BPMSensor, int[] EMGSensor)
   {
 
-    DocumentReference patientRef = db.Collection("VictusExergame").Document(instituitionName).Collection("Pacientes").Document(patientName).Collection("Jogos").Document("VictusExergame");
-    CollectionReference sessionsRef = patientRef.Collection("Sessoes");
+    CollectionReference trackRef = db.Collection("VictusExergame").Document(instituitionName).Collection("Pacientes").Document(patientName).Collection(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
     string sessionName = date.Replace("/", "-");
-    sessionsRef.Document(sessionName).SetAsync(new Dictionary<string, object>
+    trackRef.Document(sessionName).SetAsync(new Dictionary<string, object>
             {
                 { "distancia", distanceTravelled },
                 { "tempo de sessão", sessionTime },
@@ -167,34 +147,32 @@ public class DatabaseManager : MonoBehaviour
     try
     {
       List<string> patients = new List<string>();
-
-      // Referência para a coleção de pacientes
       CollectionReference patientsRef = db.Collection("VictusExergame")
           .Document(institutionName)
           .Collection("Pacientes");
 
-      // Busca os documentos de forma assíncrona
+      Debug.Log("[DatabaseManager] PacientesRef: " + patientsRef.Path);
+
       QuerySnapshot snapshot = await patientsRef.GetSnapshotAsync();
 
-      // Processa os resultados na thread principal
-      await UnityMainThreadDispatcher.Instance().EnqueueAsync(() =>
-      {
-        foreach (DocumentSnapshot document in snapshot.Documents)
-        {
-          if (document.Exists)
-          {
-            patients.Add(document.Id);
-          }
-        }
-      });
+      Debug.Log("[DatabaseManager] Snapshot tem " + snapshot.Documents.Count() + " documentos");
 
+      foreach (DocumentSnapshot document in snapshot.Documents)
+      {
+        if (document.Exists)
+          patients.Add(document.Id);
+      }
+
+      Debug.Log("[DatabaseManager] Lista final: " + string.Join(", ", patients));
       return patients;
     }
     catch (Exception e)
     {
-      Debug.LogError($"Erro ao buscar pacientes: {e.Message}");
+      Debug.LogError($"[DatabaseManager] Erro ao buscar pacientes: {e}");
       return new List<string>();
     }
+
   }
+
 }
 
