@@ -43,24 +43,12 @@ public class Controle : MonoBehaviour
   private bool onceCoroutine = false;
 
   private DatabaseManager databaseManager;
+  private bool isReconnecting = false;
+
   void Awake()
   {
     BMXScript = BMXBike.GetComponent<BikeSystem.controller.MotorcycleController>();
     this.pacientName = "TESTE";
-  }
-
-  private static void DataThread()
-  {
-    string correctPort = FindCorrectPort();
-    if (string.IsNullOrEmpty(correctPort))
-    {
-      Debug.LogError("No valid COM port found with the expected data format!");
-      return;
-    }
-
-    serial = new SerialPort(correctPort, 115200);
-    serial.Open();
-    Thread.Sleep(200);
   }
 
   private static string FindCorrectPort()
@@ -68,13 +56,16 @@ public class Controle : MonoBehaviour
     string[] ports = SerialPort.GetPortNames();
     Debug.Log("Available ports: " + string.Join(", ", ports));
 
+    // Reverse the array to start from the last port
+    Array.Reverse(ports);
+
     foreach (string port in ports)
     {
       try
       {
         using (SerialPort testPort = new SerialPort(port, 115200))
         {
-          testPort.ReadTimeout = 1000; // 1 second timeout
+          testPort.ReadTimeout = 500; // Reduced timeout to 500ms
           testPort.Open();
 
           // Try to read data
@@ -96,7 +87,49 @@ public class Controle : MonoBehaviour
       }
     }
 
+    // If no port is found, return the last port in the list as a fallback
+    if (ports.Length > 0)
+    {
+      Debug.LogWarning($"No valid port found with expected data format. Using last available port: {ports[0]}");
+      return ports[0];
+    }
+
+    Debug.LogWarning("No COM ports available. Please check device connections.");
     return null;
+  }
+
+  private static void DataThread()
+  {
+    int retryCount = 0;
+    const int maxRetries = 3;
+
+    while (retryCount < maxRetries)
+    {
+      string correctPort = FindCorrectPort();
+      if (!string.IsNullOrEmpty(correctPort))
+      {
+        try
+        {
+          serial = new SerialPort(correctPort, 115200);
+          serial.Open();
+          Thread.Sleep(200);
+          return; // Successfully connected
+        }
+        catch (Exception e)
+        {
+          Debug.LogError($"Failed to open port {correctPort}: {e.Message}");
+          retryCount++;
+          Thread.Sleep(1000); // Wait 1 second before retrying
+        }
+      }
+      else
+      {
+        retryCount++;
+        Thread.Sleep(1000); // Wait 1 second before retrying
+      }
+    }
+
+    Debug.LogError("Failed to establish serial connection after multiple attempts");
   }
 
   // private void OnDestroy(){
@@ -128,6 +161,39 @@ public class Controle : MonoBehaviour
     }
   }
 
+  private IEnumerator ReconnectSerialPort()
+  {
+    if (isReconnecting) yield break;
+
+    isReconnecting = true;
+    Debug.LogWarning("Iniciando tentativa de reconexão...");
+
+    try
+    {
+      if (serial != null)
+      {
+        serial.Close();
+        serial.Dispose();
+      }
+    }
+    catch (Exception e)
+    {
+      Debug.LogError("Erro ao fechar porta serial: " + e.Message);
+    }
+
+    yield return new WaitForSeconds(1f); // Espera 1 segundo antes de tentar reconectar
+
+    try
+    {
+      DataThread();
+    }
+    catch (Exception e)
+    {
+      Debug.LogError("Erro na reconexão: " + e.Message);
+    }
+
+    isReconnecting = false;
+  }
 
   // Update is called once per frame
   void Update()
@@ -141,9 +207,6 @@ public class Controle : MonoBehaviour
       if (BMXScript.useSerial == 1)
         getArrayValues();
 
-      // bike.Pause ();
-      // musica.Pause ();
-      //******INSTANTIATE OS SCORES
       if (once == 0)
       {
         this.SaveToJson();
@@ -160,7 +223,6 @@ public class Controle : MonoBehaviour
       tempoMinutos = (int)tempo / 60;
       tempoSegundos = (int)tempo % 60;
       displayContagem.text = tempoMinutos.ToString("00") + ":" + tempoSegundos.ToString("00");
-      // Debug.Log("BarreiraScore: " + this.barreiraScore);
       this.score = trackWaypoints.waypointScore - this.barreiraScore;
       displayScore.text = "score: " + score.ToString();
 
@@ -170,47 +232,80 @@ public class Controle : MonoBehaviour
         this.displayVelocidade.text = this.velInt.ToString();
         distanceTravelled = distanceTravelled + this.velInt * Time.deltaTime;
         this.displayDistance.text = distanceTravelled.ToString();
-
       }
       else
       {
         try
         {
-          string[] valores = serial.ReadLine().Split('#'); // separador de valores
-          // Debug.Log("Valores" + "#"+valores[0] +"#"+ valores[1] +"#"+ valores[2] + "#" + valores[3] );
-          while (valores.Length < 5)
-          { // to avoid errors
-            valores = serial.ReadLine().Split('#'); // separador de valores
-            serial.BaseStream.Flush(); //Clear the serial information so we assure we get new information.
+          if (serial != null && serial.IsOpen)
+          {
+            if (serial.BytesToRead > 0)
+            {
+              string[] valores = serial.ReadLine().Split('#'); // separador de valores
+
+              // Ensure we have valid data
+              if (valores.Length >= 5)
+              {
+                this.bpm = valores[0];
+                if (float.TryParse(valores[1], NumberStyles.Any, CultureInfo.InvariantCulture, out float vel))
+                {
+                  this.velocidade = vel;
+                }
+                this.emg = valores[2];
+                if (int.TryParse(valores[3], out int dir))
+                {
+                  this.direcao = dir;
+                }
+                if (float.TryParse(valores[4], NumberStyles.Any, CultureInfo.InvariantCulture, out float dist))
+                {
+                  this.distanceTravelled = dist;
+                }
+
+                // Log dos valores obtidos
+                Debug.Log($"BPM#{this.bpm}#Vel#{this.velocidade}#EMG#{this.emg}#Dir#{this.direcao}#Dist#{this.distanceTravelled}");
+
+                displayBatimentos.text = this.bpm;
+                displayEmg.text = "EMG: " + this.emg;
+                this.velInt = (int)this.BMXScript.ActualVelocity;
+                this.displayVelocidade.text = this.velInt.ToString();
+                this.displayDistance.text = distanceTravelled.ToString();
+
+                serial.BaseStream.Flush(); //Clear the serial information
+              }
+              else
+              {
+                Debug.LogWarning($"Dados incompletos recebidos. Tamanho: {valores.Length}, Esperado: 5");
+                Debug.Log($"Dados recebidos: {string.Join("#", valores)}");
+              }
+            }
           }
-          this.bpm = valores[0];
-          this.velocidade = float.Parse(valores[1], CultureInfo.InvariantCulture);
-          this.emg = valores[2];
-          this.direcao = int.Parse(valores[3]);
-          this.distanceTravelled = float.Parse(valores[4], CultureInfo.InvariantCulture);
-
-          //eixo = valores [3];
-          // LerDadosDoSerial();
-          Debug.Log("Valores" + "#" + this.bpm + "#" + this.velocidade + "#" + this.emg + "#" + this.direcao + "#" + this.distanceTravelled);
-          displayBatimentos.text = this.bpm;
-          displayEmg.text = "EMG: " + this.emg;
-          // navmesh.speed = (float)(velocidade / 3.6);						
-          this.velInt = (int)this.BMXScript.ActualVelocity;
-          this.displayVelocidade.text = this.velInt.ToString();
-          this.displayDistance.text = distanceTravelled.ToString();
-
-          serial.BaseStream.Flush(); //Clear the serial information so we assure we get new information.
+          else
+          {
+            // Try to reconnect if port is not open
+            if (serial == null || !serial.IsOpen)
+            {
+              if (!isReconnecting)
+              {
+                StartCoroutine(ReconnectSerialPort());
+              }
+            }
+          }
         }
         catch (Exception e)
         {
           Debug.LogError("Erro ao ler dados do dispositivo: " + e.Message);
           displayBatimentos.text = "Conecte os sensores";
-          displayEmg.text = "Conecte o sensores";
+          displayEmg.text = "Conecte os sensores";
           displayVelocidade.text = "0";
           displayDistance.text = "0";
+
+          // Try to reconnect on error
+          if (!isReconnecting)
+          {
+            StartCoroutine(ReconnectSerialPort());
+          }
         }
       }
-
     }
   }
 
