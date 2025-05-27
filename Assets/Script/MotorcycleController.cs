@@ -22,7 +22,7 @@ namespace BikeSystem.controller
     public float steeringForce = 20;
     public float maxInclinationSet = 0.5f;
     public float ActualVelocity;
-    public Controle serial = new Controle();
+    [SerializeField] private Controle serial;
 
     [HideInInspector] public Rigidbody rigidbody;
 
@@ -39,12 +39,21 @@ namespace BikeSystem.controller
 
     private void Awake()
     {
-      // print("bora anda de bike");
-      useSerial = PlayerPrefs.GetInt("WASD"); // descomentar para gerar a versão buildada
+      useSerial = PlayerPrefs.GetInt("WASD");
       Debug.Log("useSerial: " + useSerial);
       audio = GetComponent<AudioSource>();
       rigidbody = GetComponent<Rigidbody>();
       rigidbody.constraints = RigidbodyConstraints.FreezeRotationZ;
+
+      // Ensure serial reference is set
+      if (serial == null)
+      {
+        serial = FindObjectOfType<Controle>();
+        if (serial == null)
+        {
+          Debug.LogError("Controle component not found in scene!");
+        }
+      }
     }
 
     private void Start()
@@ -78,6 +87,7 @@ namespace BikeSystem.controller
       {
         SteerBase();
         AccelBase();
+        Debug.Log($"[MOTORCYCLE] Modo WASD - Velocidade: {ActualVelocity:F1} km/h");
       }
       else
       {
@@ -91,6 +101,145 @@ namespace BikeSystem.controller
       LerpSteerDecrementalR();
       LerpSteerIncrementalL();
       LerpSteerIncrementalR();
+      //   if (serial != null)
+      //   {
+      //     bool isConnected = serial.IsSerialConnected();
+      //     float velocidade = serial.getVelocidade();
+      //     int direcao = serial.getDirecao();
+      //     string bpm = serial.GetBPM();
+      //     string emg = serial.GetEMG();
+
+      //     // Log detailed info every 5 seconds to avoid spam
+      //     if (Time.fixedTime % 5 < 0.02f)
+      //     {
+      //       Debug.Log($"[MOTORCYCLE] Vel:{velocidade:F1} Dir:{direcao} BPM:{bpm} EMG:{emg}");
+      //     }
+
+      //     // Apply steering with mapping
+      //     float mappedDirection = Map(direcao, 0, 255, -1, 1);
+      //     frontWheel.steerAngle = mappedDirection * steeringForce;
+
+      //     // Apply acceleration based on velocity from serial
+      //     if (velocidade > 0)
+      //     {
+      //       if (useLimit && velocidade < limitBike)
+      //       {
+      //         rearWheel.motorTorque = velocidade * movementForce;
+      //         rearWheel.brakeTorque = 0;
+      //         if (Time.fixedTime % 2 < 0.02f)
+      //           Debug.Log($"[MOTORCYCLE] ✅ Acelerando com limite - Vel:{velocidade} Torque: {rearWheel.motorTorque:F0}");
+      //       }
+      //       else if (!useLimit)
+      //       {
+      //         rearWheel.motorTorque = velocidade * movementForce;
+      //         rearWheel.brakeTorque = 0;
+      //         if (Time.fixedTime % 2 < 0.02f)
+      //           Debug.Log($"[MOTORCYCLE] ✅ Acelerando sem limite - Vel:{velocidade} Torque: {rearWheel.motorTorque:F0}");
+      //       }
+      //       else
+      //       {
+      //         rearWheel.motorTorque = 0;
+      //         if (Time.fixedTime % 2 < 0.02f)
+      //           Debug.Log($"[MOTORCYCLE] ⚠️ Velocidade no limite - Vel:{velocidade} >= {limitBike}");
+      //       }
+      //     }
+      //     else
+      //     {
+      //       rearWheel.motorTorque = 0;
+      //       rearWheel.brakeTorque = 100; // Light braking when no velocity
+      //       if (Time.fixedTime % 2 < 0.02f)
+      //         Debug.Log($"[MOTORCYCLE] 🛑 Velocidade zero - Freando");
+      //     }
+
+      //     // Update smooth steering based on mapped direction
+      //     if (mappedDirection > 0.1f && ActualVelocity >= 5)
+      //     {
+      //       if (smoothSteerR < 1)
+      //       {
+      //         smoothSteerR = smoothSteerR + 0.02f;
+      //       }
+      //       else
+      //       {
+      //         smoothSteerR = 1;
+      //       }
+      //       Debug.Log($"[MOTORCYCLE] Virando direita - smoothSteerR: {smoothSteerR:F3}");
+      //     }
+      //     else if (mappedDirection < -0.1f && ActualVelocity >= 5)
+      //     {
+      //       if (smoothSteerL < 1)
+      //       {
+      //         smoothSteerL = smoothSteerL + 0.02f;
+      //       }
+      //       else
+      //       {
+      //         smoothSteerL = 1;
+      //       }
+      //       Debug.Log($"[MOTORCYCLE] Virando esquerda - smoothSteerL: {smoothSteerL:F3}");
+      //     }
+      //     else
+      //     {
+      //       // Decrease steering smoothly when no input
+      //       if (smoothSteerR > 0.01f)
+      //       {
+      //         smoothSteerR = smoothSteerR - 0.01f;
+      //       }
+      //       else
+      //       {
+      //         smoothSteerR = 0;
+      //       }
+
+      //       if (smoothSteerL > 0.01f)
+      //       {
+      //         smoothSteerL = smoothSteerL - 0.01f;
+      //       }
+      //       else
+      //       {
+      //         smoothSteerL = 0;
+      //       }
+      //       Debug.Log($"[MOTORCYCLE] Centro - R:{smoothSteerR:F3} L:{smoothSteerL:F3}");
+      //     }
+      //   }
+      //   else
+      //   {
+      //     Debug.LogWarning("[MOTORCYCLE] Serial controller not found!");
+      //     rearWheel.motorTorque = 0;
+      //     rearWheel.brakeTorque = 100;
+      //   }
+      // }
+
+      // // Apply the smoothing functions for keyboard input when not using serial
+      // if (useSerial == 0)
+      // {
+      //   LerpSteerDecrementalR();
+      //   LerpSteerDecrementalL();
+      //   LerpSteerIncrementalR();
+      //   LerpSteerIncrementalL();
+      // }
+
+      // // Update visual elements
+      // SteerTransform.localEulerAngles = new Vector3(
+      //   SteerTransform.localEulerAngles.x,
+      //   steeringForce * (smoothSteerR - smoothSteerL),
+      //   SteerTransform.localEulerAngles.z
+      // );
+
+      // if (!hit)
+      // {
+      //   transform.localEulerAngles = new Vector3(
+      //     transform.localEulerAngles.x,
+      //     transform.localEulerAngles.y,
+      //     maxInclination * (smoothSteerR - smoothSteerL)
+      //   );
+      // }
+
+      // ActualVelocity = (rigidbody.linearVelocity.magnitude * 3.6f); // Convert to km/h
+      // rigidbody.solverIterations = 100;
+
+      // // Log velocidade atual periodicamente
+      // if (Time.fixedTime % 2 < 0.02f) // A cada 2 segundos aproximadamente
+      // {
+      //   Debug.Log($"[MOTORCYCLE] Velocidade Atual: {ActualVelocity:F1} km/h | Modo: {(useSerial == 0 ? "WASD" : "SERIAL")}");
+      // }
     }
 
     void UpdatePos(WheelCollider wheel, Transform wheelTrans)
@@ -141,7 +290,6 @@ namespace BikeSystem.controller
         rearWheel.brakeTorque = 0; // Define o torque de frenagem como zero para liberar a roda traseira e permitir aceleração
       }
     }
-
     // Função que controla a bike por meio da entrada serial
     private void AccelSerial()
     {
@@ -211,11 +359,13 @@ namespace BikeSystem.controller
     //Função que controla a direção da moto/bike
     private void SteerSerial()
     {
-      // float InputSteer = Input.GetAxis("Horizontal");
-      float InputSteer = Map(serial.getDirecao(), 0, 255, -1, 1);
-      float InputAccel = Input.GetAxis("Vertical");
-      // float InputAccel = Map(serial.getVelocidade(), 0, 255, -1, 1);
+      float direcao = serial.getDirecao();
+      Debug.Log($"Direção recebida: {direcao}");
+      float InputSteer = Map(direcao, 0, 255, -1, 1);
+      Debug.Log($"Direção mapeada: {InputSteer}");
+
       frontWheel.steerAngle = InputSteer * steeringForce;
+      Debug.Log($"Ângulo da roda: {frontWheel.steerAngle}");
 
       SteerTransform.localEulerAngles = new Vector3(SteerTransform.localEulerAngles.x, steeringForce * (smoothSteerR - smoothSteerL), SteerTransform.localEulerAngles.z);
 
@@ -227,7 +377,6 @@ namespace BikeSystem.controller
       {
         transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, maxInclination * (smoothSteerR - smoothSteerL));
       }
-      rigidbody.solverIterations = 100;
       rigidbody.solverIterations = 100;
     }
 
