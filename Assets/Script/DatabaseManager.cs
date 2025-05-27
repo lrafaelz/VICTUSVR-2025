@@ -118,28 +118,60 @@ public class DatabaseManager : MonoBehaviour
 
   public async Task add_patient_sessions(string instituitionName, string patientName, string date, float distanceTravelled, int sessionTime, int score, int[] velocity, int[] BPMSensor, int[] EMGSensor)
   {
+    // --- 1. Preparar Referências e Dados ---
 
-    CollectionReference trackRef = db.Collection("VictusExergame").Document(instituitionName).Collection("Pacientes").Document(patientName).Collection(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+    // Pega o nome da pista (que é o nome da subcoleção)
+    string pistaName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+
+    // Referência ao documento do PACIENTE (o documento "pai" que vamos atualizar)
+    DocumentReference pacienteRef = db.Collection("VictusExergame").Document(instituitionName).Collection("Pacientes").Document(patientName);
+
+    // Referência ao NOVO DOCUMENTO de sessão que vamos criar
     string sessionName = date.Replace("/", "-");
-    trackRef.Document(sessionName).SetAsync(new Dictionary<string, object>
-            {
-                { "distancia", distanceTravelled },
-                { "tempo de sessão", sessionTime },
-                { "pontuacao", score },
-                { "velocidade", velocity },
-                { "BPM", BPMSensor },
-                { "EMG", EMGSensor }
-            }).ContinueWithOnMainThread(task =>
-            {
-              if (task.IsFaulted)
-              {
-                Debug.LogError("Falha ao adicionar sessão: " + task.Exception);
-              }
-              else
-              {
-                Debug.Log("Sessão adicionada com sucesso.");
-              }
-            });
+    DocumentReference sessaoRef = pacienteRef.Collection(pistaName).Document(sessionName);
+
+    // Dados para o novo documento da sessão
+    var sessionData = new Dictionary<string, object>
+    {
+        { "distancia", distanceTravelled },
+        { "tempo de sessão", sessionTime },
+        { "pontuacao", score },
+        { "velocidade", velocity },
+        { "BPM", BPMSensor },
+        { "EMG", EMGSensor }
+    };
+
+    // --- 2. Preparar a Operação de Atualização do Paciente ---
+
+    // Dados para atualizar o array no documento do paciente.
+    // FieldValue.ArrayUnion adiciona o nome da pista ao array 'pistasDisponiveis'
+    // APENAS se ele ainda não existir, prevenindo duplicatas.
+    var patientUpdateData = new Dictionary<string, object>
+    {
+        { "pistasDisponiveis", FieldValue.ArrayUnion(pistaName) }
+    };
+
+    // --- 3. Executar as Duas Operações em um Batch Atômico ---
+    try
+    {
+      // Inicia um novo lote de escritas
+      WriteBatch batch = db.StartBatch();
+
+      // Operação 1: Cria o novo documento da sessão
+      batch.Set(sessaoRef, sessionData);
+
+      // Operação 2: Atualiza o documento do paciente com o nome da nova pista
+      batch.Update(pacienteRef, patientUpdateData);
+
+      // Executa (commita) o lote. Ou tudo funciona, ou nada funciona.
+      await batch.CommitAsync();
+
+      Debug.Log("Sessão adicionada e lista de pistas do paciente atualizada com sucesso!");
+    }
+    catch (Exception e)
+    {
+      Debug.LogError("Falha ao executar a escrita em lote: " + e);
+    }
   }
 
   public async Task<List<string>> GetPatientsList(string institutionName)
