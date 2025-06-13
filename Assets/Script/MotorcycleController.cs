@@ -91,7 +91,7 @@ namespace BikeSystem.controller
       }
       else
       {
-        this.limitBike = serial.getVelocidade() + 5;
+        this.limitBike = serial.getVelocidade() + 3;
         SteerSerial();
         AccelSerial();
 
@@ -362,6 +362,10 @@ namespace BikeSystem.controller
       float direcao = serial.getDirecao();
       Debug.Log($"Direção recebida: {direcao}");
       float InputSteer = Map(direcao, 0, 255, -1, 1);
+      if (direcao >= 116 && direcao <= 122)
+      {
+        InputSteer = 0;
+      }
       Debug.Log($"Direção mapeada: {InputSteer}");
 
       frontWheel.steerAngle = InputSteer * steeringForce;

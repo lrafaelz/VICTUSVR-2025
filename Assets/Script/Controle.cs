@@ -399,7 +399,7 @@ public class Controle : MonoBehaviour
   // Update is called once per frame
   void Update()
   {
-    if (tempo >= fimDaPartida)
+    if (tempo >= fimDaPartida || Input.GetKeyDown(KeyCode.Escape))
     {
       //fim da partida
       displayScore.text = "Acabou a sessão!";
