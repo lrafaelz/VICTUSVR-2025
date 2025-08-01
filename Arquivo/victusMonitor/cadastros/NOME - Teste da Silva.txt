@@ -1,0 +1,13 @@
+NOME - Teste da Silva
+DATA DE NASCIMENTO - 02/12/1993
+CPF/RG - 03109701057
+ALTURA - 1.75
+PESO - 85
+REGISTRO - 123456
+TELEFONE - 5369811
+EMAIL - teste@gmail.com
+SEXO - Feminino
+COR - Parda
+NÍVEL DE AMPUTAÇÃO - Transtibial - 1/3 Médio
+CAUSA DA AMPUTAÇÃO - Adquirida - Diabetes
+LADO DA AMPUTAÇÃO - Direito

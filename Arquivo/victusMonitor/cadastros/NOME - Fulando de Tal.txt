@@ -1,0 +1,13 @@
+NOME - Fulando de Tal
+DATA DE NASCIMENTO - 15/12/1879
+CPF/RG - 03115464661
+ALTURA - 1.87
+PESO - 91
+REGISTRO - 123456
+TELEFONE - 22991478569
+EMAIL - fulano@gmail.com
+SEXO - Masculino
+COR - Caucasiana
+NÍVEL DE AMPUTAÇÃO - Transtibial - 1/3 Médio
+CAUSA DA AMPUTAÇÃO - Traumática - Lesão por Arma de Fogo
+LADO DA AMPUTAÇÃO - Esquerdo

@@ -1,0 +1,13 @@
+NOME - Michel Berdet Vinhais
+DATA DE NASCIMENTO - 07/10/1983
+CPF-RG - 00264011007
+ALTURA - 1,70
+PESO - 60
+REGISTRO - 4274
+TELEFONE - 999528494
+EMAIL - emailprovisiorio@teste.com
+SEXO - Masculino
+COR - Caucasiana
+NÍVEL DE AMPUTAÇÃO - Transfemural - 1/3 Médio
+CAUSA DA AMPUTAÇÃO - Traumática - Lesão por Arma de Fogo
+LADO DA AMPUTAÇÃO - Direito

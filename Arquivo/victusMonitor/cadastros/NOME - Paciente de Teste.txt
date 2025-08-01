@@ -1,0 +1,13 @@
+NOME - Paciente de Teste
+DATA DE NASCIMENTO - 08/08/2017
+CPF/RG - 031548112
+ALTURA - 1.75
+PESO - 82
+REGISTRO - 12345
+TELEFONE - 53991478563
+EMAIL - pacienteteste@unipampa.br
+SEXO - Masculino
+COR - Caucasiana
+NÍVEL DE AMPUTAÇÃO - Transfemural - 1/3 Médio
+CAUSA DA AMPUTAÇÃO - Traumática - Acidente Automobilistico
+LADO DA AMPUTAÇÃO - Direito

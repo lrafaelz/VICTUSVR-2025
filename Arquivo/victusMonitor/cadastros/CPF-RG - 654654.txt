@@ -1,0 +1,13 @@
+NOME - Paciente ABC
+DATA DE NASCIMENTO - 07/08/1996
+CPF-RG - 654654
+ALTURA - 1,78
+PESO - 95
+REGISTRO - 45789
+TELEFONE - 5399784
+EMAIL - tstemknkfd
+SEXO - Masculino
+COR - Caucasiana
+Transfemural - 1/3 Médio
+Traumática - Acidente de Trabalho
+Direito

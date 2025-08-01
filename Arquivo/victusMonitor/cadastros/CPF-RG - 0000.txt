@@ -1,0 +1,13 @@
+NOME - PACIENTE X
+DATA DE NASCIMENTO - 10/02/2135
+CPF-RG - 0000
+ALTURA - 1.75
+PESO - 75
+REGISTRO - 756
+TELEFONE - 539994154
+EMAIL - teste
+SEXO - Masculino
+COR - Parda
+NÍVEL DE AMPUTAÇÃO - Transfemural - 1/3 Médio
+CAUSA DA AMPUTAÇÃO - Adquirida - Diabetes
+LADO DA AMPUTAÇÃO - Esquerdo

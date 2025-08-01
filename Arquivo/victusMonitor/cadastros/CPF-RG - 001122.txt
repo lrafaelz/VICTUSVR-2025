@@ -1,0 +1,13 @@
+NOME - Testezinho Básico
+DATA DE NASCIMENTO - 25/12/2013
+CPF-RG - 001122
+ALTURA - 1.75
+PESO - 95
+REGISTRO - 123456
+TELEFONE - 55987412365
+EMAIL - basico@gmail.com
+SEXO - Masculino
+COR - Parda
+NÍVEL DE AMPUTAÇÃO - Transfemural - 1/3 Médio
+CAUSA DA AMPUTAÇÃO - Traumática - Lesão por Arma de Fogo
+LADO DA AMPUTAÇÃO - Esquerdo
