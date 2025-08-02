@@ -881,10 +881,10 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 0
   windowsGamepadBackendHint: 0
-  cloudProjectId: a0cfafb7-83fd-4aa7-ac62-2fd207ee7c44
+  cloudProjectId: e4e91c5a-3d94-42b8-97b8-886977b52b59
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: VICTUSVR (1)
+  projectName: VICTUSVR
   organizationId: unity_3be34da00edafdb4415b
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 1

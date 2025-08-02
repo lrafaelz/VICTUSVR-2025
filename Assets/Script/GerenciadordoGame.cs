@@ -19,10 +19,11 @@ public class GerenciadordoGame : MonoBehaviour
 
   public static GerenciadordoGame instancia;
 
+  // Removido o auto-reload da cena Login que causava loop infinito
   // IEnumerator Start()
   // {
-  //   // yield return new WaitForSeconds(5);
-  //   // SceneManager.LoadScene("Login", LoadSceneMode.Single);
+  //   yield return new WaitForSeconds(5);
+  //   SceneManager.LoadScene("Login", LoadSceneMode.Single);
   // }
   public static void FinalizarJogo()
   {

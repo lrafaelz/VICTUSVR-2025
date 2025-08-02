@@ -46,6 +46,8 @@ public class AuthManager : MonoBehaviour
       return;
     }
 
+    // Não destruir este objeto ao carregar novas cenas
+    DontDestroyOnLoad(gameObject);
     InitializeFirebaseWithCheck();
   }
 
