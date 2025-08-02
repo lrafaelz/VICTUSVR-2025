@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "495418887892",
+    "firebase_url": "https://victus-exergame-default-rtdb.firebaseio.com",
+    "project_id": "victus-exergame",
+    "storage_bucket": "victus-exergame.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:495418887892:android:b76ceeaece527dbc73f541",
+        "android_client_info": {
+          "package_name": "com.GIMM.VICTUSVR"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpknGfgPutwLZEdfn6nDRAzYYEXlPJQPE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
